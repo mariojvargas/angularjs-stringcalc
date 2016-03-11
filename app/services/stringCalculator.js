@@ -11,15 +11,10 @@
     }
 
     StringCalculator.prototype.add = function (numbers) {
-        var DEFAULT_DELIMITER = ",",
-            ESCAPED_NEWLINE_CHARACTER = "\\n",
-            CUSTOM_DELIMITER_TRAILING_HEADER = "//",
-            CUSTOM_DELIMITER_AND_NUMBERS_SEPARATOR = "\n",
-            CUSTOM_DELIMITER_PATTERN_STRING = "\\[([^\\]]+)\\]",
-            MAXIMUM_NUMBER_TO_ADD = 1000;
-        
         if (numbers) {
-            var parsedNumbers = parseNumbers(numbers);
+            var numberStringParser = new StringCalculatorParser();
+
+            var parsedNumbers = numberStringParser.parse(numbers);
 
             ensureNoNegatives(parsedNumbers);
 
@@ -27,6 +22,36 @@
         }
 
         return 0;
+
+        function ensureNoNegatives(numberList) {
+            var negativeNumbers = numberList.filter(function (n) { 
+                return n < 0; 
+            });
+
+            if (negativeNumbers.length) {
+                throw new Error("Negatives not allowed: " + negativeNumbers.join(", "));
+            }
+        }
+
+        function calculateSum(numberList) {
+            return numberList.reduce(function (currentSum, currentNumber) {
+                return currentSum + currentNumber;
+            });
+        }
+    };
+
+    function StringCalculatorParser() {
+    }
+
+    StringCalculatorParser.prototype.parse = function (numbers) {
+        var DEFAULT_DELIMITER = ",",
+            ESCAPED_NEWLINE_CHARACTER = "\\n",
+            CUSTOM_DELIMITER_TRAILING_HEADER = "//",
+            CUSTOM_DELIMITER_AND_NUMBERS_SEPARATOR = "\n",
+            CUSTOM_DELIMITER_PATTERN_STRING = "\\[([^\\]]+)\\]",
+            MAXIMUM_NUMBER_TO_ADD = 1000;
+
+        return parseNumbers(numbers);
 
         function parseNumbers(numbers) {
             var numbersInfo = analyzeNumbers(numbers);
@@ -122,26 +147,10 @@
             return customDelimiterHeader;
         }
 
-        function calculateSum(numberList) {
-            return numberList.reduce(function (currentSum, currentNumber) {
-                return currentSum + currentNumber;
-            });
-        }
-
         function createDefaultDelimiterPattern() {
             var delimiterPatternString = DEFAULT_DELIMITER + "|" + ESCAPED_NEWLINE_CHARACTER;
 
             return new RegExp(delimiterPatternString);
-        }
-
-        function ensureNoNegatives(numberList) {
-            var negativeNumbers = numberList.filter(function (n) { 
-                return n < 0; 
-            });
-
-            if (negativeNumbers.length) {
-                throw new Error("Negatives not allowed: " + negativeNumbers.join(", "));
-            }
         }
 
         function hasCustomDelimiterTrailingHeader(rawNumbers) {
