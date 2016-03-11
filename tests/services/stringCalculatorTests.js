@@ -127,6 +127,44 @@ describe("StringCalculator Service", function () {
             expect(addMethodWrapper).toThrowError(expectedErrorMessage);
         });
 
+        describe("Custom Delimiters", function () {
+            it("should return 7, given a single custom delimiter in the string '//;\\n1;2;4'", function () {
+                // Arrange
+                var numbers = "//;\n1;2;4",
+                    expectedValue = 7;
+
+                // Act
+                var actualValue = stringCalculator.add(numbers);
+
+                // Assert
+                expect(actualValue).toBe(expectedValue);
+            });
+
+            it("should be able to handle a delimiter of any length, so it should return 6 given the string '//[***]\\n1***2***3'", function () {
+                // Arrange
+                var numbers = "//[***]\n1***2***3",
+                    expectedValue = 6;
+
+                // Act
+                var actualValue = stringCalculator.add(numbers);
+
+                // Assert
+                expect(actualValue).toBe(expectedValue);
+            });
+
+            it("should allow multiple delimiters, so it should return 6 given the string '//[*][%]\\n11*22%33'", function () {
+                // Arrange
+                var numbers = "//[*][%]\n11*22%33",
+                    expectedValue = 66;
+
+                // Act
+                var actualValue = stringCalculator.add(numbers);
+
+                // Assert
+                expect(actualValue).toBe(expectedValue);
+            });
+        });
+
         function wrapAddMethod(numbers) {
             return function () {
                 stringCalculator.add(numbers);

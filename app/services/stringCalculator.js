@@ -26,7 +26,14 @@
     }
 
     function parseNumbers(numbers) {
-        var rawNumbers = numbers.split(createDefaultDelimiterPattern());
+
+        var delimiter = extractDelimiter(numbers);
+
+        if (numbers.indexOf("//") === 0) {
+            numbers = numbers.split("\n")[1];
+        }
+
+        var rawNumbers = numbers.split(delimiter);
 
         var parsedNumbers = rawNumbers.map(function (s) { 
             return parseInt(s, 10); 
@@ -35,6 +42,18 @@
         return parsedNumbers.filter(function (n) {
             return n <= MAXIMUM_NUMBER_TO_ADD;
         });
+    }
+
+    function extractDelimiter(numbers) {
+        if (numbers.indexOf("//;") === 0) {
+            return ";";
+        } else if (numbers.indexOf("//[***]") === 0) {
+            return "***";
+        } else if (numbers.indexOf("//[*][%]") === 0) {
+            return new RegExp("\\*|\\%");
+        }
+
+        return createDefaultDelimiterPattern();
     }
 
     function calculateSum(numberList) {
