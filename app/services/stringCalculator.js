@@ -7,6 +7,7 @@
         ESCAPED_NEWLINE_CHARACTER = "\\n",
         CUSTOM_DELIMITER_TRAILING_HEADER = "//",
         CUSTOM_DELIMITER_AND_NUMBERS_SEPARATOR = "\n",
+        CUSTOM_DELIMITER_PATTERN_STRING = "\\[([^\\]]+)\\]",
         MAXIMUM_NUMBER_TO_ADD = 1000;
 
     function stringCalculatorFactory() {
@@ -64,25 +65,29 @@
     }
 
     function extractCustomDelimiter(customDelimiterHeader) {
-        customDelimiterHeader = removeTrailingHeader(customDelimiterHeader);
+        var rawCustomDelimiter = removeTrailingHeader(customDelimiterHeader);
 
-        var customDelimiterPatternString = "\\[([^\\]]+)\\]";
-        
-        var delimiterMatches = customDelimiterHeader.match(new RegExp(customDelimiterPatternString, "g"));
+        if (1 === rawCustomDelimiter.length) {
+            return rawCustomDelimiter;
+        } 
 
-        if (null === delimiterMatches) {
-            return customDelimiterHeader;
-        } else if (delimiterMatches.length > 1) {
-            var delimiters = separateCustomDelimiters(delimiterMatches, customDelimiterPatternString);
+        var delimiterMatches = rawCustomDelimiter.match(new RegExp(CUSTOM_DELIMITER_PATTERN_STRING, "g"));
 
-            var escapedDelimiters = escapeDelimitersForRegularExpressions(delimiters);
-
-            var combinedDelimiterPattern = escapedDelimiters.join("|");
-
-            return new RegExp(combinedDelimiterPattern);
+        if (1 === delimiterMatches.length) {
+            return unwrapSingleCustomDelimiter(rawCustomDelimiter, CUSTOM_DELIMITER_PATTERN_STRING);
         }
 
-        return extractCustomDelimiterWithPattern(customDelimiterHeader, customDelimiterPatternString);
+        return convertMultipleCustomDelimitersToRegularExpression(delimiterMatches, CUSTOM_DELIMITER_PATTERN_STRING);
+    }
+
+    function convertMultipleCustomDelimitersToRegularExpression(delimiterMatches, delimiterPatternString) {
+        var delimiters = unwrapCustomDelimiters(delimiterMatches, delimiterPatternString);
+
+        var escapedDelimiters = escapeDelimitersForRegularExpressions(delimiters);
+
+        var combinedDelimiterPattern = escapedDelimiters.join("|");
+
+        return new RegExp(combinedDelimiterPattern);
     }
 
     function escapeDelimitersForRegularExpressions(delimiters) {
@@ -99,13 +104,13 @@
         return "\\" + s;
     }
 
-    function separateCustomDelimiters(rawDelimiters, customDelimiterPatternString) {
+    function unwrapCustomDelimiters(rawDelimiters, customDelimiterPatternString) {
         return rawDelimiters.map(function (s) {
-            return extractCustomDelimiterWithPattern(s, customDelimiterPatternString);
+            return unwrapSingleCustomDelimiter(s, customDelimiterPatternString);
         });
     }
 
-    function extractCustomDelimiterWithPattern(rawDelimiter, delimiterPatternString) {
+    function unwrapSingleCustomDelimiter(rawDelimiter, delimiterPatternString) {
         return rawDelimiter.match(new RegExp(delimiterPatternString))[1]
     }
 
