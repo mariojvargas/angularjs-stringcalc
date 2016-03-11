@@ -67,5 +67,17 @@ describe("StringCalculator Service", function () {
             // Assert
             expect(actualValue).toBe(expectedValue);
         });
+
+        it("should ignore numbers bigger than 1000, so it should return 1500 given the string '300,150,1001,50,1000'", function () {
+            // Arrange
+            var numbers = "300,150,1001,50,1000",
+                expectedValue = 1500;
+
+            // Act
+            var actualValue = stringCalculator.add(numbers);
+
+            // Assert
+            expect(actualValue).toBe(expectedValue);
+        });
     });
 });

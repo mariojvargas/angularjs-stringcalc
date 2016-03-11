@@ -3,8 +3,9 @@
 
     angular.module("app.services").factory("stringCalculator", [stringCalculatorFactory]);
 
-    var DEFAULT_DELIMITER = ",";
-    
+    var DEFAULT_DELIMITER = ",",
+        MAXIMUM_NUMBER_TO_ADD = 1000;
+
     function stringCalculatorFactory() {
         return {
             add: add
@@ -28,7 +29,9 @@
             return parseInt(s, 10); 
         });
 
-        return parsedNumbers;
+        return parsedNumbers.filter(function (n) {
+            return n <= MAXIMUM_NUMBER_TO_ADD;
+        });
     }
 
     function calculateSum(numberList) {
