@@ -4,8 +4,9 @@
     angular.module("app.services").factory("stringCalculator", [stringCalculatorFactory]);
 
     var DEFAULT_DELIMITER = ",",
-        NEWLINE_DELIMITER_PATTERN_STRING = "\\n",
+        ESCAPED_NEWLINE_CHARACTER = "\\n",
         CUSTOM_DELIMITER_TRAILING_HEADER = "//",
+        CUSTOM_DELIMITER_AND_NUMBERS_SEPARATOR = "\n",
         MAXIMUM_NUMBER_TO_ADD = 1000;
 
     function stringCalculatorFactory() {
@@ -43,28 +44,45 @@
     }
 
     function analyzeNumbers(numbers) {
-        var delimiter = extractDelimiter(numbers);
+        var delimiter,
+            rawNumbers;
 
-        if (numbers.indexOf(CUSTOM_DELIMITER_TRAILING_HEADER) === 0) {
-            numbers = numbers.split("\n")[1];
+        if (hasCustomDelimiterTrailingHeader(numbers)) {
+            var delimiterHeaderAndNumbers = numbers.split(CUSTOM_DELIMITER_AND_NUMBERS_SEPARATOR),
+                customDelimiterHeader = delimiterHeaderAndNumbers[0];
+
+            delimiter = extractDelimiter(customDelimiterHeader);
+            rawNumbers = delimiterHeaderAndNumbers[1];
+        } else {
+            delimiter = createDefaultDelimiterPattern();
+            rawNumbers = numbers;
         }
 
         return {
-            rawNumberList: numbers,
+            rawNumberList: rawNumbers,
             delimiter: delimiter
         };
     }
 
-    function extractDelimiter(numbers) {
-        if (numbers.indexOf("//;") === 0) {
+    function extractDelimiter(customDelimiterHeader) {
+        customDelimiterHeader = removeTrailingHeader(customDelimiterHeader);
+
+        if (customDelimiterHeader === ";") {
             return ";";
-        } else if (numbers.indexOf("//[***]") === 0) {
+        } else if (customDelimiterHeader === "[***]") {
             return "***";
-        } else if (numbers.indexOf("//[*][%]") === 0) {
+        } else if (customDelimiterHeader === "[*][%]") {
             return new RegExp("\\*|\\%");
+        } else if (customDelimiterHeader === "[@][**][$$$]") {
+            return new RegExp("\\@|\\*\\*|\\$\\$\\$");
         }
 
         return createDefaultDelimiterPattern();
+    }
+
+    function removeTrailingHeader(customDelimiterHeader) {
+        // Assumes the trailing header is at index 0
+        return customDelimiterHeader.substring(CUSTOM_DELIMITER_TRAILING_HEADER.length);
     }
 
     function calculateSum(numberList) {
@@ -78,7 +96,7 @@
     }
 
     function createDefaultDelimiterPattern() {
-        var delimiterPatternString = DEFAULT_DELIMITER + "|" + NEWLINE_DELIMITER_PATTERN_STRING;
+        var delimiterPatternString = DEFAULT_DELIMITER + "|" + ESCAPED_NEWLINE_CHARACTER;
 
         return new RegExp(delimiterPatternString);
     }
