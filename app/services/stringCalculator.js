@@ -11,17 +11,17 @@
     }
 
     StringCalculator.prototype.add = function (numbers) {
-        if (numbers) {
-            var numberStringParser = new StringCalculatorParser();
-
-            var parsedNumbers = numberStringParser.parse(numbers);
-
-            ensureNoNegatives(parsedNumbers);
-
-            return calculateSum(parsedNumbers);
+        if ("" === numbers) {
+            return 0;
         }
 
-        return 0;
+        var numberStringParser = new StringCalculatorParser();
+
+        var parsedNumbers = numberStringParser.parse(numbers);
+
+        ensureNoNegatives(parsedNumbers);
+
+        return calculateSum(parsedNumbers);
 
         function ensureNoNegatives(numberList) {
             var negativeNumbers = numberList.filter(function (n) { 
