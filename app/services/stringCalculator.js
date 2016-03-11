@@ -4,6 +4,7 @@
     angular.module("app.services").factory("stringCalculator", [stringCalculatorFactory]);
 
     var DEFAULT_DELIMITER = ",",
+        NEWLINE_DELIMITER_PATTERN_STRING = "\\n",
         MAXIMUM_NUMBER_TO_ADD = 1000;
 
     function stringCalculatorFactory() {
@@ -23,7 +24,7 @@
     }
 
     function parseNumbers(numbers) {
-        var rawNumbers = numbers.split(DEFAULT_DELIMITER);
+        var rawNumbers = numbers.split(createDefaultDelimiterPattern());
 
         var parsedNumbers = rawNumbers.map(function (s) { 
             return parseInt(s, 10); 
@@ -42,5 +43,11 @@
         });
 
         return sum;
+    }
+
+    function createDefaultDelimiterPattern() {
+        var delimiterPatternString = DEFAULT_DELIMITER + "|" + NEWLINE_DELIMITER_PATTERN_STRING;
+
+        return new RegExp(delimiterPatternString);
     }
 })();

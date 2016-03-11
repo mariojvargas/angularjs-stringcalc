@@ -79,5 +79,17 @@ describe("StringCalculator Service", function () {
             // Assert
             expect(actualValue).toBe(expectedValue);
         });
+
+        it("should be able to handle new lines between numbers, so it should return 6 given the string '1\\n2,3'", function () {
+            // Arrange
+            var numbers = "1\n2,3",
+                expectedValue = 6;
+
+            // Act
+            var actualValue = stringCalculator.add(numbers);
+
+            // Assert
+            expect(actualValue).toBe(expectedValue);
+        });
     });
 });
