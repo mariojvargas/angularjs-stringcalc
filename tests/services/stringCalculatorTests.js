@@ -7,8 +7,17 @@ describe("StringCalculator Service", function () {
         stringCalculator = _stringCalculator_;
     }));
 
-    it("is defined", function () {
-        expect(stringCalculator).toBeTruthy();
-        expect(stringCalculator.constructor).toBe(Object.prototype.constructor);
+    describe("add() method", function () {
+        it("should return 0 given an empty string", function () {
+            // Arrange
+            var numbers = "",
+                expectedValue = 0;
+
+            // Act
+            var actualValue = stringCalculator.add(numbers);
+
+            // Assert
+            expect(actualValue).toBe(expectedValue);
+        });
     });
 });
