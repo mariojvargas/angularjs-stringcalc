@@ -3,13 +3,6 @@
 
     angular.module("app.services").factory("stringCalculator", [stringCalculatorFactory]);
 
-    var DEFAULT_DELIMITER = ",",
-        ESCAPED_NEWLINE_CHARACTER = "\\n",
-        CUSTOM_DELIMITER_TRAILING_HEADER = "//",
-        CUSTOM_DELIMITER_AND_NUMBERS_SEPARATOR = "\n",
-        CUSTOM_DELIMITER_PATTERN_STRING = "\\[([^\\]]+)\\]",
-        MAXIMUM_NUMBER_TO_ADD = 1000;
-
     function stringCalculatorFactory() {
         return new StringCalculator();
     }
@@ -18,6 +11,13 @@
     }
 
     StringCalculator.prototype.add = function (numbers) {
+        var DEFAULT_DELIMITER = ",",
+            ESCAPED_NEWLINE_CHARACTER = "\\n",
+            CUSTOM_DELIMITER_TRAILING_HEADER = "//",
+            CUSTOM_DELIMITER_AND_NUMBERS_SEPARATOR = "\n",
+            CUSTOM_DELIMITER_PATTERN_STRING = "\\[([^\\]]+)\\]",
+            MAXIMUM_NUMBER_TO_ADD = 1000;
+        
         if (numbers) {
             var parsedNumbers = parseNumbers(numbers);
 
