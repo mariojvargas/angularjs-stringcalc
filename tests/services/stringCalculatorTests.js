@@ -8,10 +8,46 @@ describe("StringCalculator Service", function () {
     }));
 
     describe("add() method", function () {
-        it("should return 0 given an empty string", function () {
+        it("should return 0, given an empty string", function () {
             // Arrange
             var numbers = "",
                 expectedValue = 0;
+
+            // Act
+            var actualValue = stringCalculator.add(numbers);
+
+            // Assert
+            expect(actualValue).toBe(expectedValue);
+        });
+
+        it("should return 42, given the string '42'", function () {
+            // Arrange
+            var numbers = "42",
+                expectedValue = 42;
+
+            // Act
+            var actualValue = stringCalculator.add(numbers);
+
+            // Assert
+            expect(actualValue).toBe(expectedValue);
+        });
+
+        it("should return 50, given the string '42,8'", function () {
+            // Arrange
+            var numbers = "42,8",
+                expectedValue = 50;
+
+            // Act
+            var actualValue = stringCalculator.add(numbers);
+
+            // Assert
+            expect(actualValue).toBe(expectedValue);
+        });
+
+        it("should return 10, given the string '1,5,4'", function () {
+            // Arrange
+            var numbers = "1,5,4",
+                expectedValue = 10;
 
             // Act
             var actualValue = stringCalculator.add(numbers);
