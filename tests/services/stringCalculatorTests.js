@@ -91,5 +91,46 @@ describe("StringCalculator Service", function () {
             // Assert
             expect(actualValue).toBe(expectedValue);
         });
+
+        it("should throw an error given the string contains a negative number", function () {
+            // Arrange
+            var numbers = "1,-1,3";
+
+            // Act
+            var addMethodWrapper = wrapAddMethod(numbers);
+
+            // Assert
+            expect(addMethodWrapper).toThrowError(Error);
+        });
+
+        it("should throw an error with the message 'Negatives not allowed: -5' given the string '1,4,-5,6'", function () {
+            // Arrange
+            var numbers = "1,4,-5,6",
+                expectedErrorMessage = "Negatives not allowed: -5";
+
+            // Act
+            var addMethodWrapper = wrapAddMethod(numbers);
+
+            // Assert
+            expect(addMethodWrapper).toThrowError(expectedErrorMessage);
+        });
+
+        it("should throw an error with the message 'Negatives not allowed: -1,-42,-3' given the string '-1,4,-42,6,-3'", function () {
+            // Arrange
+            var numbers = "-1,4,-42,6,-3",
+                expectedErrorMessage = "Negatives not allowed: -1, -42, -3";
+
+            // Act
+            var addMethodWrapper = wrapAddMethod(numbers);
+
+            // Assert
+            expect(addMethodWrapper).toThrowError(expectedErrorMessage);
+        });
+
+        function wrapAddMethod(numbers) {
+            return function () {
+                stringCalculator.add(numbers);
+            };
+        }
     });
 });

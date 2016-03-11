@@ -17,6 +17,8 @@
         if (numbers) {
             var parsedNumbers = parseNumbers(numbers);
 
+            ensureNoNegatives(parsedNumbers);
+
             return calculateSum(parsedNumbers);
         }
 
@@ -49,5 +51,15 @@
         var delimiterPatternString = DEFAULT_DELIMITER + "|" + NEWLINE_DELIMITER_PATTERN_STRING;
 
         return new RegExp(delimiterPatternString);
+    }
+
+    function ensureNoNegatives(numberList) {
+        var negativeNumbers = numberList.filter(function (n) { 
+            return n < 0; 
+        });
+
+        if (negativeNumbers.length) {
+            throw new Error("Negatives not allowed: " + negativeNumbers.join(", "));
+        }
     }
 })();
