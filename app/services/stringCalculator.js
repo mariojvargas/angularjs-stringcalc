@@ -48,10 +48,9 @@
             rawNumbers;
 
         if (hasCustomDelimiterTrailingHeader(numbers)) {
-            var delimiterHeaderAndNumbers = numbers.split(CUSTOM_DELIMITER_AND_NUMBERS_SEPARATOR),
-                customDelimiterHeader = delimiterHeaderAndNumbers[0];
+            var delimiterHeaderAndNumbers = numbers.split(CUSTOM_DELIMITER_AND_NUMBERS_SEPARATOR);
 
-            delimiter = extractDelimiter(customDelimiterHeader);
+            delimiter = extractCustomDelimiter(delimiterHeaderAndNumbers[0]);
             rawNumbers = delimiterHeaderAndNumbers[1];
         } else {
             delimiter = createDefaultDelimiterPattern();
@@ -64,25 +63,44 @@
         };
     }
 
-    function extractDelimiter(customDelimiterHeader) {
+    function extractCustomDelimiter(customDelimiterHeader) {
         customDelimiterHeader = removeTrailingHeader(customDelimiterHeader);
 
-        if (customDelimiterHeader === ";") {
-            return ";";
-        } else if (customDelimiterHeader === "[***]") {
-            return "***";
-        } else if (customDelimiterHeader === "[*][%]") {
-            return new RegExp("\\*|\\%");
+        var customDelimiterPatternString = "\\[([^\\]]+)\\]";
+        
+        var delimiterMatches = customDelimiterHeader.match(new RegExp(customDelimiterPatternString, "g"));
+
+        if (null === delimiterMatches) {
+            return customDelimiterHeader;
         } else if (customDelimiterHeader === "[@][**][$$$]") {
             return new RegExp("\\@|\\*\\*|\\$\\$\\$");
+        } else if (delimiterMatches.length > 1) {
+            var delimiters = delimiterMatches.map(function (s) {
+                return extractCustomDelimiterWithPattern(s, customDelimiterPatternString);
+            });
+
+            var escapedDelimiters = delimiters.map(function (s) {
+                return "\\" + s;
+            });
+
+            var combinedDelimiterPattern = escapedDelimiters.join("|");
+
+            return new RegExp(combinedDelimiterPattern);
         }
 
-        return createDefaultDelimiterPattern();
+        return extractCustomDelimiterWithPattern(customDelimiterHeader, customDelimiterPatternString);
+    }
+
+    function extractCustomDelimiterWithPattern(rawDelimiter, delimiterPatternString) {
+        return rawDelimiter.match(new RegExp(delimiterPatternString))[1]
     }
 
     function removeTrailingHeader(customDelimiterHeader) {
-        // Assumes the trailing header is at index 0
-        return customDelimiterHeader.substring(CUSTOM_DELIMITER_TRAILING_HEADER.length);
+        if (customDelimiterHeader.indexOf(CUSTOM_DELIMITER_TRAILING_HEADER) === 0) {
+            return customDelimiterHeader.substring(CUSTOM_DELIMITER_TRAILING_HEADER.length);
+        }
+
+        return customDelimiterHeader;
     }
 
     function calculateSum(numberList) {
