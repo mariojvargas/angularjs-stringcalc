@@ -88,7 +88,7 @@
     function escapeDelimitersForRegularExpressions(delimiters) {
         return delimiters.map(function (delimiter) {
             var delimiterCharacters = delimiter.split("");
-            
+
             var escapedCharacters = delimiterCharacters.map(escapeForUseInRegularExpression);
 
             return escapedCharacters.join("");
@@ -118,13 +118,9 @@
     }
 
     function calculateSum(numberList) {
-        var sum = 0;
-
-        numberList.forEach(function (n) {
-            sum += n;
+        return numberList.reduce(function (currentSum, currentNumber) {
+            return currentSum + currentNumber;
         });
-
-        return sum;
     }
 
     function createDefaultDelimiterPattern() {
