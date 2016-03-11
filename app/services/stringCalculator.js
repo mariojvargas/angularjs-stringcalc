@@ -10,18 +10,16 @@
     }
 
     function add(numbers) {
+        var sum = 0;
+
         if (numbers) {
-            if ("1,5,4" === numbers) {
-                return 10;
-            }
+            var parsedNumbers = numbers.split(",").map(function (s) { return parseInt(s, 10); });
 
-            if ("42,8" === numbers) {
-                return 50;
-            }
-
-            return 42;
+            parsedNumbers.forEach(function (n) {
+                sum += n;
+            });
         }
 
-        return 0;
+        return sum;
     }
 })();

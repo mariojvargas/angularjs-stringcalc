@@ -55,5 +55,17 @@ describe("StringCalculator Service", function () {
             // Assert
             expect(actualValue).toBe(expectedValue);
         });
+
+        it("should return the sum of the numbers, given an unknown list of comma-separated numbers", function () {
+            // Arrange
+            var numbers = "1,5,4,6,7,8,100",
+                expectedValue = 131;
+
+            // Act
+            var actualValue = stringCalculator.add(numbers);
+
+            // Assert
+            expect(actualValue).toBe(expectedValue);
+        });
     });
 });
