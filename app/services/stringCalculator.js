@@ -72,16 +72,10 @@
 
         if (null === delimiterMatches) {
             return customDelimiterHeader;
-        } else if (customDelimiterHeader === "[@][**][$$$]") {
-            return new RegExp("\\@|\\*\\*|\\$\\$\\$");
         } else if (delimiterMatches.length > 1) {
-            var delimiters = delimiterMatches.map(function (s) {
-                return extractCustomDelimiterWithPattern(s, customDelimiterPatternString);
-            });
+            var delimiters = separateCustomDelimiters(delimiterMatches, customDelimiterPatternString);
 
-            var escapedDelimiters = delimiters.map(function (s) {
-                return "\\" + s;
-            });
+            var escapedDelimiters = escapeDelimitersForRegularExpressions(delimiters);
 
             var combinedDelimiterPattern = escapedDelimiters.join("|");
 
@@ -89,6 +83,26 @@
         }
 
         return extractCustomDelimiterWithPattern(customDelimiterHeader, customDelimiterPatternString);
+    }
+
+    function escapeDelimitersForRegularExpressions(delimiters) {
+        return delimiters.map(function (delimiter) {
+            var delimiterCharacters = delimiter.split("");
+            
+            var escapedCharacters = delimiterCharacters.map(escapeForUseInRegularExpression);
+
+            return escapedCharacters.join("");
+        });
+    }
+
+    function escapeForUseInRegularExpression(s) {
+        return "\\" + s;
+    }
+
+    function separateCustomDelimiters(rawDelimiters, customDelimiterPatternString) {
+        return rawDelimiters.map(function (s) {
+            return extractCustomDelimiterWithPattern(s, customDelimiterPatternString);
+        });
     }
 
     function extractCustomDelimiterWithPattern(rawDelimiter, delimiterPatternString) {
