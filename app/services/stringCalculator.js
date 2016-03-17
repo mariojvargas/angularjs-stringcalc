@@ -136,7 +136,7 @@
         }
 
         function unwrapSingleCustomDelimiter(rawDelimiter, delimiterPatternString) {
-            return rawDelimiter.match(new RegExp(delimiterPatternString))[1]
+            return rawDelimiter.match(new RegExp(delimiterPatternString))[1];
         }
 
         function removeTrailingHeader(customDelimiterHeader) {
