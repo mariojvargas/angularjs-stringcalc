@@ -34,3 +34,6 @@ node_modules
 
 # Build/Distribution
 www
+
+# Code Editor-Specific
+.idea
