@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <title>String Calculator</title>
+    <meta charset="utf-8" />
+</head>
+<body ng-controller="StringCalculatorController">
+    <h1>String Calculator</h1>
+    <form>
+        <label for="numbers">Numbers:</label>
+        <textarea id="numbers" ng-model="numbers" rows="5" cols="50"></textarea>
+        <button type="submit" id="calculate-sum-button" ng-click="calculateSum()">Calculate Sum</button>
+    </form>
+
+    <p>Result <span id="sum-of-numbers">{{ sumOfNumbers }}</span>
+
+    <script src="scripts/vendor/angular.js"></script>
+    <script src="scripts/app/services/app.services.js"></script>
+    <script src="scripts/app/services/stringCalculator.js"></script>    
+    <script src="scripts/app/controllers/app.controllers.js"></script>
+    <script src="scripts/app/controllers/stringCalculatorController.js"></script>
+    <script src="scripts/app/app.js"></script>
+</body>
+</html>
