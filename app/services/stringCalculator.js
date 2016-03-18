@@ -15,28 +15,40 @@
             return 0;
         }
 
-        var numberStringParser = new StringCalculatorParser();
+        var numberStringParser = new StringCalculatorParser(),
+            numbersValidator = new StringCalculatorValidator(),
+            numberCalculator = new NumberCalculator();
 
         var parsedNumbers = numberStringParser.parse(numbers);
 
-        ensureNoNegatives(parsedNumbers);
+        numbersValidator.validateWithError(parsedNumbers);
 
-        return calculateSum(parsedNumbers);
+        return numberCalculator.sum(parsedNumbers);
+    };
+
+    function NumberCalculator() {
+    }
+
+    NumberCalculator.prototype.sum = function (numbers) {
+        return numbers.reduce(function (currentSum, currentNumber) {
+            return currentSum + currentNumber;
+        });
+    };
+
+    function StringCalculatorValidator() {
+    }
+
+    StringCalculatorValidator.prototype.validateWithError = function (numbersToValidate) {
+        ensureNoNegatives(numbersToValidate);
 
         function ensureNoNegatives(numberList) {
-            var negativeNumbers = numberList.filter(function (n) { 
-                return n < 0; 
+            var negativeNumbers = numberList.filter(function (n) {
+                return n < 0;
             });
 
             if (negativeNumbers.length) {
                 throw new Error("Negatives not allowed: " + negativeNumbers.join(", "));
             }
-        }
-
-        function calculateSum(numberList) {
-            return numberList.reduce(function (currentSum, currentNumber) {
-                return currentSum + currentNumber;
-            });
         }
     };
 
