@@ -20,7 +20,7 @@
     "protractor": "^3.2.1"
   },
   "scripts": {
-    "test": "karma start"
+    "test": "karma start karma.conf.js"
   },
   "repository": {
     "type": "git",
