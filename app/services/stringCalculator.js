@@ -29,10 +29,12 @@
     function NumberCalculator() {
     }
 
+    NumberCalculator.prototype.add = function (a, b) {
+        return a + b;
+    };
+
     NumberCalculator.prototype.sum = function (numbers) {
-        return numbers.reduce(function (currentSum, currentNumber) {
-            return currentSum + currentNumber;
-        });
+        return numbers.reduce(this.add);
     };
 
     function StringCalculatorValidator() {
@@ -74,11 +76,9 @@
                 return parseInt(s, 10); 
             });
 
-            var numbersUptoMaximum = parsedNumbers.filter(function (n) {
+            return parsedNumbers.filter(function (n) {
                 return n <= MAXIMUM_NUMBER_TO_ADD;
             });
-
-            return numbersUptoMaximum;
         }
 
         function analyzeNumbers(numbers) {
