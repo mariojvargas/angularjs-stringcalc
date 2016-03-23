@@ -1,58 +1,34 @@
 (function () {
     "use strict";
 
-    angular.module("app.services").factory("stringCalculator", [stringCalculatorFactory]);
+    angular
+        .module("app.services")
+        .factory("stringCalculator", [
+            "stringCalculatorValidator",
+            "numberCalculator",
+            stringCalculatorFactory
+    ]);
 
-    function stringCalculatorFactory() {
+    function stringCalculatorFactory(stringCalculatorValidator, numberCalculator) {
+        function StringCalculator() {
+        }
+
+        StringCalculator.prototype.add = function (numbers) {
+            if ("" === numbers) {
+                return 0;
+            }
+
+            var numberStringParser = new StringCalculatorParser();
+
+            var parsedNumbers = numberStringParser.parse(numbers);
+
+            stringCalculatorValidator.validateWithError(parsedNumbers);
+
+            return numberCalculator.sum(parsedNumbers);
+        };
+
         return new StringCalculator();
     }
-
-    function StringCalculator() {
-    }
-
-    StringCalculator.prototype.add = function (numbers) {
-        if ("" === numbers) {
-            return 0;
-        }
-
-        var numberStringParser = new StringCalculatorParser(),
-            numbersValidator = new StringCalculatorValidator(),
-            numberCalculator = new NumberCalculator();
-
-        var parsedNumbers = numberStringParser.parse(numbers);
-
-        numbersValidator.validateWithError(parsedNumbers);
-
-        return numberCalculator.sum(parsedNumbers);
-    };
-
-    function NumberCalculator() {
-    }
-
-    NumberCalculator.prototype.add = function (a, b) {
-        return a + b;
-    };
-
-    NumberCalculator.prototype.sum = function (numbers) {
-        return numbers.reduce(this.add);
-    };
-
-    function StringCalculatorValidator() {
-    }
-
-    StringCalculatorValidator.prototype.validateWithError = function (numbersToValidate) {
-        ensureNoNegatives(numbersToValidate);
-
-        function ensureNoNegatives(numberList) {
-            var negativeNumbers = numberList.filter(function (n) {
-                return n < 0;
-            });
-
-            if (negativeNumbers.length) {
-                throw new Error("Negatives not allowed: " + negativeNumbers.join(", "));
-            }
-        }
-    };
 
     function StringCalculatorParser() {
     }
