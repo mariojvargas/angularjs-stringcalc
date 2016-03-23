@@ -3,15 +3,17 @@
 
     angular
         .module("app.services")
-        .service("stringCalculator", [
+        .factory("stringCalculator", [
             "stringCalculatorParser",
             "stringCalculatorValidator",
             "numberCalculator",
-            StringCalculator
+            stringCalculatorFactory
         ]);
 
-    function StringCalculator(stringCalculatorParser, stringCalculatorValidator, numberCalculator) {
-        this.add = add;
+    function stringCalculatorFactory(stringCalculatorParser, stringCalculatorValidator, numberCalculator) {
+        return {
+            add: add
+        };
 
         function add(numbers) {
             if ("" === numbers) {
