@@ -26,4 +26,8 @@ gulp.task("watch", function () {
     gulp.watch(["./app/**/*.html"], ["html", "js"]);
 });
 
+gulp.task("build", ["html", "js"]);
+
+gulp.task("run", ["build", "webserver", "watch"]);
+
 gulp.task("default", ["webserver", "watch"]);
