@@ -3,18 +3,17 @@
 
     angular
         .module("app.services")
-        .factory("stringCalculator", [
+        .service("stringCalculator", [
             "stringCalculatorParser",
             "stringCalculatorValidator",
             "numberCalculator",
-            stringCalculatorFactory
-    ]);
+            StringCalculator
+        ]);
 
-    function stringCalculatorFactory(stringCalculatorParser, stringCalculatorValidator, numberCalculator) {
-        function StringCalculator() {
-        }
+    function StringCalculator(stringCalculatorParser, stringCalculatorValidator, numberCalculator) {
+        this.add = add;
 
-        StringCalculator.prototype.add = function (numbers) {
+        function add(numbers) {
             if ("" === numbers) {
                 return 0;
             }
@@ -24,8 +23,6 @@
             stringCalculatorValidator.validateWithError(parsedNumbers);
 
             return numberCalculator.sum(parsedNumbers);
-        };
-
-        return new StringCalculator();
+        }
     }
 }());
