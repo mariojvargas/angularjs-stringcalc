@@ -34,9 +34,7 @@ describe("StringCalculatorController", function () {
                 expectedNumbers = "1,2,3,4";
                 expectedSum = 10;
 
-                fakeStringCalculator = createFakeStringCalculator();
-
-                spyOn(fakeStringCalculator, "add").and.returnValue(expectedSum);
+                fakeStringCalculator = createFakeStringCalculator(expectedSum);
 
                 $scope = {};
 
@@ -64,9 +62,21 @@ describe("StringCalculatorController", function () {
         });
     }
 
-    function createFakeStringCalculator() {
-        return {
-            add: function () {}
-        };
+    function createFakeStringCalculator(expectedSum) {
+        var fakeStringCalculator = jasmine.createSpyObj("fakeStringCalculator", ["add"]);
+
+        fakeStringCalculator.add.and.returnValue(expectedSum || 0);
+
+        return fakeStringCalculator;
+
+        /* Compare the following:
+            var fakeStringCalculator = {
+                add: angular.noop
+            };
+
+            spyOn(fakeStringCalculator, "add").and.returnValue(expectedSum);
+
+            return fakeStringCalculator;
+        */
     }
 });
