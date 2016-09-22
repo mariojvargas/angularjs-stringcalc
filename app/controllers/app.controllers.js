@@ -1,5 +1,5 @@
 (function () {
     "use strict";
 
-    angular.module("app.controllers", ["app.services"]);
+    angular.module("app.controllers", ["app.services", "app.filters"]);
 }());
