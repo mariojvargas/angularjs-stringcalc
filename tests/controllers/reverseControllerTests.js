@@ -3,7 +3,6 @@ describe("ReverseController", function () {
 
     // See: https://docs.angularjs.org/api/ng/provider/$filterProvider
     beforeEach(module("app.controllers", function ($filterProvider) {
-        console.log($filterProvider);
         fakeReverseFilter = jasmine.createSpy("fakeReverseFilter");
 
         $filterProvider.register("reverse", function () {
